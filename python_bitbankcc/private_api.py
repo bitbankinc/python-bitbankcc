@@ -34,7 +34,7 @@ except:
     from urllib.parse import urlencode
 
 def sign_request(key, query):
-    h = hmac.new(key, query, sha256)
+    h = hmac.new(bytearray(key, 'utf8'), bytearray(query, 'utf8'), sha256)
     return h.hexdigest()
 
 def make_header(query_data, api_key, api_secret):
