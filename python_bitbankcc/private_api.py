@@ -79,7 +79,9 @@ class bitbankcc_private(object):
             'order_id': order_id
         })
     
-    def get_active_orders(self, pair, options={}):
+    def get_active_orders(self, pair, options=None):
+        if options is None:
+            options = {}
         if not 'pair' in options:
             options['pair'] = pair
         return self._get_query('/user/spot/active_orders?', options)
