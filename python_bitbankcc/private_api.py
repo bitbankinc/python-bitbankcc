@@ -26,12 +26,17 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 from .utils import error_parser
 from hashlib import sha256
+from logging import getLogger
 import requests, hmac, time, json
 
 try:
     from urllib import urlencode
 except:
     from urllib.parse import urlencode
+
+
+logger = getLogger(__name__)
+
 
 def sign_request(key, query):
     h = hmac.new(bytearray(key, 'utf8'), bytearray(query, 'utf8'), sha256)
@@ -56,7 +61,7 @@ class bitbankcc_private(object):
     
     def _get_query(self, path, query):
         data = '/v1' + path + urlencode(query)
-        print('GET: ' + data)
+        logger.debug('GET: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path + urlencode(query)
         response = requests.get(uri, headers=headers)
@@ -64,7 +69,7 @@ class bitbankcc_private(object):
     
     def _post_query(self, path, query):
         data = json.dumps(query)
-        print('POST: ' + data)
+        logger.debug('POST: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path
         response = requests.post(uri, data=data, headers=headers)
