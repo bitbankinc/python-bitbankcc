@@ -5,7 +5,7 @@
 ## インストール
 
 ```
-sudo pip install python-bitbankcc
+sudo pip install git+https://github.com/bitbankinc/python-bitbankcc.git
 ```
 
 ## パラメーターの詳細
