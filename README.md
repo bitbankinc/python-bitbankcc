@@ -116,6 +116,11 @@ value = prv.get_orders_info(
 )
 print(json.dumps(value))
 
+value = prv.get_trade_history(
+    'btc_jpy', # ペア
+    '10' # 取得する約定数
+)
+
 value = prv.get_withdraw_account(
     'btc' # アセットタイプ
 )
@@ -125,7 +130,7 @@ value = prv.request_withdraw(
     'btc', # アセットタイプ
     'e9fb5d9f-0509-4cb5-8325-ec13ade4354c', # 引き出し先UUID
     '10.123', # 引き出し数
-    {　# 有効になっていた場合に必須
+    { # 有効になっていた場合に必須
         'otp_token': '387427',
         'sms_token': '836827'
     }

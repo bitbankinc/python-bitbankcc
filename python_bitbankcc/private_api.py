@@ -118,6 +118,12 @@ class bitbankcc_private(object):
             'order_ids': order_ids
         })
 
+    def get_trade_history(self, pair, order_count):
+        return self._get_query('/user/spot/trade_history?', {
+            'pair': pair,
+            'count': order_count
+        })
+
     def get_withdraw_account(self, asset):
         return self._get_query('/user/withdrawal_account?', {
             'asset': asset
