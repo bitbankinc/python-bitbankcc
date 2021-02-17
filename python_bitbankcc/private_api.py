@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from .utils import error_parser
 from hashlib import sha256
 from logging import getLogger
-import requests, hmac, time, json
+import requests, hmac, time, json, contextlib
 
 try:
     from urllib import urlencode
@@ -64,7 +64,6 @@ class bitbankcc_private(object):
         logger.debug('GET: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path + urlencode(query)
-        import contextlib
         with contextlib.closing(requests.get(uri, headers=headers)) as response:
             return error_parser(response.json())
     
@@ -73,7 +72,6 @@ class bitbankcc_private(object):
         logger.debug('POST: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path
-        import contextlib
         with contextlib.closing(requests.post(uri, data=data, headers=headers)) as response:
             return error_parser(response.json())
     
