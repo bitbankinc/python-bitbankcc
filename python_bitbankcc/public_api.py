@@ -26,7 +26,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 from .utils import error_parser
 from logging import getLogger
-import requests
+import requests, contextlib
 
 
 logger = getLogger(__name__)
@@ -38,8 +38,8 @@ class bitbankcc_public(object):
         self.end_point = 'https://public.bitbank.cc'
     
     def _query(self, query_url):
-        response = requests.get(query_url)
-        return error_parser(response.json())
+        with contextlib.closing(requests.get(query_url)) as response:
+            return error_parser(response.json())
     
     def get_ticker(self, pair):
         path = '/' + pair + '/ticker'
