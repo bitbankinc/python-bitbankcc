@@ -64,16 +64,18 @@ class bitbankcc_private(object):
         logger.debug('GET: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path + urlencode(query)
-        response = requests.get(uri, headers=headers)
-        return error_parser(response.json())
+        import contextlib
+        with contextlib.closing(requests.get(uri, headers=headers)) as response:
+            return error_parser(response.json())
     
     def _post_query(self, path, query):
         data = json.dumps(query)
         logger.debug('POST: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path
-        response = requests.post(uri, data=data, headers=headers)
-        return error_parser(response.json())
+        import contextlib
+        with contextlib.closing(requests.post(uri, data=data, headers=headers)) as response:
+            return error_parser(response.json())
     
     def get_asset(self):
         return self._get_query('/user/assets', {})

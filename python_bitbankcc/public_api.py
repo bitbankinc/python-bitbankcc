@@ -38,8 +38,9 @@ class bitbankcc_public(object):
         self.end_point = 'https://public.bitbank.cc'
     
     def _query(self, query_url):
-        response = requests.get(query_url)
-        return error_parser(response.json())
+        import contextlib
+        with contextlib.closing(requests.get(query_url)) as response:
+            return error_parser(response.json())
     
     def get_ticker(self, pair):
         path = '/' + pair + '/ticker'
