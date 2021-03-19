@@ -34,8 +34,8 @@ logger = getLogger(__name__)
 
 class bitbankcc_public(object):
     
-    def __init__(self):
-        self.end_point = 'https://public.bitbank.cc'
+    def __init__(self, end_point='https://public.bitbank.cc'):
+        self.end_point = end_point
     
     def _query(self, query_url):
         with contextlib.closing(requests.get(query_url)) as response:

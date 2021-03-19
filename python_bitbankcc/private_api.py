@@ -54,8 +54,8 @@ def make_header(query_data, api_key, api_secret):
 
 class bitbankcc_private(object):
     
-    def __init__(self, api_key, api_secret):
-        self.end_point = 'https://api.bitbank.cc/v1'
+    def __init__(self, api_key, api_secret, end_point='https://api.bitbank.cc/v1'):
+        self.end_point = end_point
         self.api_key = api_key
         self.api_secret = api_secret
     
