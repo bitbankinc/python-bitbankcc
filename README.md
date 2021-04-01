@@ -6,7 +6,16 @@
 
 ```
 # `@<commit_hash>` で現在のmasterに固定し、インストールすることをオススメします
-sudo pip install git+https://github.com/bitbankinc/python-bitbankcc.git@<commit_hash>
+# bash コメントを意味する # の前に \ でエスケープすること
+sudo pip install git+https://github.com/bitbankinc/python-bitbankcc@<commit_hash>\#egg=python-bitbankcc
+```
+
+## requirements.txt 利用
+
+```
+...
+git+https://github.com/bitbankinc/python-bitbankcc@<commit_hash>#egg=python-bitbankcc
+...
 ```
 
 ## パラメーターの詳細
