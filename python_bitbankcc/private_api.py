@@ -91,7 +91,7 @@ class bitbankcc_private(object):
             options['pair'] = pair
         return self._get_query('/user/spot/active_orders?', options)
 
-    def order(self, pair, price, amount, side, order_type, post_only):
+    def order(self, pair, price, amount, side, order_type, post_only = False):
         return self._post_query('/user/spot/order', {
             'pair': pair,
             'price': price,
