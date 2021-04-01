@@ -5,7 +5,8 @@
 ## インストール
 
 ```
-sudo pip install git+https://github.com/bitbankinc/python-bitbankcc.git
+# `@<commit_hash>` で現在のmasterに固定し、インストールすることをオススメします
+sudo pip install git+https://github.com/bitbankinc/python-bitbankcc.git@<commit_hash>
 ```
 
 ## パラメーターの詳細
