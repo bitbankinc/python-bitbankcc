@@ -23,6 +23,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+def try_json_parse(response, logger):
+    try:
+        return response.json()
+    except:
+        logger.debug('Invalid JSON: "' + response.text + '"')
+        raise Exception('不正なJSONデータがサーバーから返ってきました。お問い合わせください')
+
 def error_parser(json_dict):
     if json_dict['success'] == 1:
         return json_dict['data']
