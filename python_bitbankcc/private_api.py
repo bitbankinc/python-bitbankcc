@@ -24,7 +24,7 @@
 # SOFTWARE.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from .utils import error_parser
+from .utils import error_parser, try_json_parse
 from hashlib import sha256
 from logging import getLogger
 import requests, hmac, time, json, contextlib
@@ -65,7 +65,7 @@ class bitbankcc_private(object):
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path + urlencode(query)
         with contextlib.closing(requests.get(uri, headers=headers)) as response:
-            return error_parser(response.json())
+            return error_parser(try_json_parse(response, logger))
     
     def _post_query(self, path, query):
         data = json.dumps(query)
@@ -73,7 +73,7 @@ class bitbankcc_private(object):
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path
         with contextlib.closing(requests.post(uri, data=data, headers=headers)) as response:
-            return error_parser(response.json())
+            return error_parser(try_json_parse(response, logger))
     
     def get_asset(self):
         return self._get_query('/user/assets', {})
