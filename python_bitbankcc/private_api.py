@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from .utils import error_parser, try_json_parse
 from hashlib import sha256
 from logging import getLogger
-import requests, hmac, time, json, contextlib
+import requests, hmac, time, json, contextlib, re
 
 try:
     from urllib import urlencode
@@ -37,6 +37,10 @@ except:
 
 logger = getLogger(__name__)
 
+
+def get_path_from_end_point(end_point):
+    match = re.match(r'^(?:http|ws)s?://[^/]+(/.+)$', end_point)
+    return '' if match == None else match[1]
 
 def sign_request(key, query):
     h = hmac.new(bytearray(key, 'utf8'), bytearray(query, 'utf8'), sha256)
@@ -56,11 +60,12 @@ class bitbankcc_private(object):
     
     def __init__(self, api_key, api_secret, end_point='https://api.bitbank.cc/v1'):
         self.end_point = end_point
+        self.path_stub = get_path_from_end_point(end_point)
         self.api_key = api_key
         self.api_secret = api_secret
     
     def _get_query(self, path, query):
-        data = '/v1' + path + urlencode(query)
+        data = self.path_stub + path + urlencode(query)
         logger.debug('GET: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path + urlencode(query)
