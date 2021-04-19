@@ -27,7 +27,7 @@ def try_json_parse(response, logger):
     try:
         return response.json()
     except:
-        logger.debug('Invalid JSON: "' + response.text + '"')
+        logger.debug('Invalid JSON: ' + repr(response.content))
         raise Exception('不正なJSONデータがサーバーから返ってきました。お問い合わせください')
 
 def error_parser(json_dict):
