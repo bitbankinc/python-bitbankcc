@@ -2,19 +2,19 @@
 # -*- coding: utf-8 -*-
 #
 # MIT License
-# 
+#
 # Copyright (c) 2017 bitbank, inc. (ビットバンク株式会社)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,7 +24,7 @@
 # SOFTWARE.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from .utils import error_parser, try_json_parse
+from .utils import error_parser, throw_too_many_request_error, try_json_parse
 from hashlib import sha256
 from logging import getLogger
 import requests, hmac, time, json, contextlib, re
@@ -57,13 +57,13 @@ def make_header(query_data, api_key, api_secret):
     }
 
 class bitbankcc_private(object):
-    
+
     def __init__(self, api_key, api_secret, end_point='https://api.bitbank.cc/v1'):
         self.end_point = end_point
         self.path_stub = get_path_from_end_point(end_point)
         self.api_key = api_key
         self.api_secret = api_secret
-    
+
     def _get_query(self, path, query):
         data = self.path_stub + path + urlencode(query)
         logger.debug('GET: ' + data)
@@ -71,24 +71,26 @@ class bitbankcc_private(object):
         uri = self.end_point + path + urlencode(query)
         with contextlib.closing(requests.get(uri, headers=headers)) as response:
             return error_parser(try_json_parse(response, logger))
-    
-    def _post_query(self, path, query):
+
+    def _post_query(self, path, query, fn = None):
         data = json.dumps(query)
         logger.debug('POST: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path
         with contextlib.closing(requests.post(uri, data=data, headers=headers)) as response:
+            if fn != None:
+                return error_parser(try_json_parse(fn(response, logger), logger))
             return error_parser(try_json_parse(response, logger))
-    
+
     def get_asset(self):
         return self._get_query('/user/assets', {})
-    
+
     def get_order(self, pair, order_id):
         return self._get_query('/user/spot/order?', {
             'pair': pair,
             'order_id': order_id
         })
-    
+
     def get_active_orders(self, pair, options=None):
         if options is None:
             options = {}
@@ -104,19 +106,19 @@ class bitbankcc_private(object):
             'side': side,
             'type': order_type,
             'post_only': post_only
-        })
-    
+        }, throw_too_many_error)
+
     def cancel_order(self, pair, order_id):
         return self._post_query('/user/spot/cancel_order', {
             'pair': pair,
             'order_id': order_id
-        })
+        }, throw_too_many_error)
 
     def cancel_orders(self, pair, order_ids):
         return self._post_query('/user/spot/cancel_orders', {
             'pair': pair,
             'order_ids': order_ids
-        })
+        }, throw_too_many_error)
 
     def get_orders_info(self, pair, order_ids):
         return self._post_query('/user/spot/orders_info', {
