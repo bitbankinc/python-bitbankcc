@@ -28,7 +28,7 @@ from requests.models import Response
 def throw_too_many_request_error(response: Response, logger) -> Response:
     if response.status_code == 409 or response.status_code == 429:
         logger.debug('エラーコード: ' + str(response.status_code) + ' 内容: ' + ERROR_CODES['70011'])
-        raise Exception(ERROR_CODES['7011'])
+        raise Exception(ERROR_CODES['70011'])
     return response
 
 def try_json_parse(response, logger):
