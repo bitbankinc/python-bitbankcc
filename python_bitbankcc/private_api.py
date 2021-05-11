@@ -106,19 +106,19 @@ class bitbankcc_private(object):
             'side': side,
             'type': order_type,
             'post_only': post_only
-        }, throw_too_many_error)
+        }, throw_too_many_request_error)
 
     def cancel_order(self, pair, order_id):
         return self._post_query('/user/spot/cancel_order', {
             'pair': pair,
             'order_id': order_id
-        }, throw_too_many_error)
+        }, throw_too_many_request_error)
 
     def cancel_orders(self, pair, order_ids):
         return self._post_query('/user/spot/cancel_orders', {
             'pair': pair,
             'order_ids': order_ids
-        }, throw_too_many_error)
+        }, throw_too_many_request_error)
 
     def get_orders_info(self, pair, order_ids):
         return self._post_query('/user/spot/orders_info', {
