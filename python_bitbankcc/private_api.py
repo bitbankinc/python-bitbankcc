@@ -24,7 +24,7 @@
 # SOFTWARE.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from .utils import error_parser, throw_too_many_request_error, try_json_parse
+from .utils import error_parser, try_json_parse
 from hashlib import sha256
 from logging import getLogger
 import requests, hmac, time, json, contextlib, re
@@ -70,17 +70,23 @@ class bitbankcc_private(object):
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path + urlencode(query)
         with contextlib.closing(requests.get(uri, headers=headers)) as response:
-            return error_parser(try_json_parse(response, logger))
+            try:
+                response.raise_for_status()
+                return error_parser(try_json_parse(response, logger))
+            except requests.exceptions.RequestException as e:
+                raise Exception(e)
 
-    def _post_query(self, path, query, fn = None):
+    def _post_query(self, path, query):
         data = json.dumps(query)
         logger.debug('POST: ' + data)
         headers = make_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path
         with contextlib.closing(requests.post(uri, data=data, headers=headers)) as response:
-            if fn != None:
-                return error_parser(try_json_parse(fn(response, logger), logger))
-            return error_parser(try_json_parse(response, logger))
+            try:
+                response.raise_for_status()
+                return error_parser(try_json_parse(response, logger))
+            except requests.exceptions.RequestException as e:
+                raise Exception(e)
 
     def get_asset(self):
         return self._get_query('/user/assets', {})
@@ -106,19 +112,19 @@ class bitbankcc_private(object):
             'side': side,
             'type': order_type,
             'post_only': post_only
-        }, throw_too_many_request_error)
+        })
 
     def cancel_order(self, pair, order_id):
         return self._post_query('/user/spot/cancel_order', {
             'pair': pair,
             'order_id': order_id
-        }, throw_too_many_request_error)
+        })
 
     def cancel_orders(self, pair, order_ids):
         return self._post_query('/user/spot/cancel_orders', {
             'pair': pair,
             'order_ids': order_ids
-        }, throw_too_many_request_error)
+        })
 
     def get_orders_info(self, pair, order_ids):
         return self._post_query('/user/spot/orders_info', {
