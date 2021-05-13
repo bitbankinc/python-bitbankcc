@@ -23,8 +23,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from requests.models import Response
-
 def try_json_parse(response, logger):
     try:
         return response.json()
