@@ -39,6 +39,7 @@ class bitbankcc_public(object):
     
     def _query(self, query_url):
         with contextlib.closing(requests.get(query_url)) as response:
+            response.raise_for_status()
             return error_parser(try_json_parse(response, logger))
     
     def get_ticker(self, pair):
