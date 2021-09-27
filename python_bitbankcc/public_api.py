@@ -46,6 +46,14 @@ class bitbankcc_public(object):
         path = '/' + pair + '/ticker'
         return self._query(self.end_point + path)
     
+    def get_tickers(self):
+        path = '/tickers'
+        return self._query(self.end_point + path)
+    
+    def get_tickers_jpy(self):
+        path = '/tickers_jpy'
+        return self._query(self.end_point + path)
+    
     def get_depth(self, pair):
         path = '/' + pair + '/depth'
         return self._query(self.end_point + path)

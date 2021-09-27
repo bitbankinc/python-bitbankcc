@@ -98,15 +98,17 @@ class bitbankcc_private(object):
             options['pair'] = pair
         return self._get_query('/user/spot/active_orders?', options)
 
-    def order(self, pair, price, amount, side, order_type, post_only = False):
-        return self._post_query('/user/spot/order', {
+    def order(self, pair, price, amount, side, order_type, post_only = None, trigger_price = None):
+        params = {
             'pair': pair,
-            'price': price,
             'amount': amount,
             'side': side,
-            'type': order_type,
-            'post_only': post_only
-        })
+            'type': order_type
+        }
+        if price != None: params['price'] = price
+        if post_only != None: params['post_only'] = post_only
+        if trigger_price != None: params['trigger_price'] = trigger_price
+        return self._post_query('/user/spot/order', params)
 
     def cancel_order(self, pair, order_id):
         return self._post_query('/user/spot/cancel_order', {
