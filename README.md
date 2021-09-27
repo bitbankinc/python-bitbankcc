@@ -101,10 +101,13 @@ print(json.dumps(value))
 
 value = prv.order(
     'btc_jpy', # ペア
-    '131594', # 価格
+    '131594', # 価格 (成行注文の場合は None にする)
     '0.0001', # 注文枚数
-    'buy', # 注文サイド
-    'market' # 注文タイプ
+    'buy', # 注文サイド (buy|sell)
+    'limit', # 注文タイプ (limit|market|stop|stop_limit)
+    # 以降は任意の引数
+    False, # post_only 注文、デフォは False, None も可能で Falseと同じ挙動
+    '151594' # trigger_price 逆指値などのトリガー価格
 )
 print(json.dumps(value))
 
