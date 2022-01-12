@@ -128,11 +128,17 @@ class bitbankcc_private(object):
             'order_ids': order_ids
         })
 
-    def get_trade_history(self, pair, order_count):
-        return self._get_query('/user/spot/trade_history?', {
+    def get_trade_history(self, pair, order_count, order_id = None, since = None, end = None, order = None):
+        params = {
             'pair': pair,
             'count': order_count
-        })
+        }
+        if order_id != None: params['order_id'] = order_id
+        if since != None: params['since'] = since
+        if end != None: params['end'] = end
+        if order != None: params['order'] = order
+        return self._get_query('/user/spot/trade_history?', params)
+
 
     def get_withdraw_account(self, asset):
         return self._get_query('/user/withdrawal_account?', {
