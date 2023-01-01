@@ -25,3 +25,4 @@
 
 from .public_api import bitbankcc_public as public
 from .private_api import bitbankcc_private as private
+from .utils import BitbankClientException
