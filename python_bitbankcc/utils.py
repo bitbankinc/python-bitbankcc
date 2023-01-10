@@ -23,7 +23,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class BitbankClientException(Exception):
+class BitbankClientError(Exception):
     def __init__(self, error_message=None):
         self.msg = error_message 
     def __str__(self):
@@ -34,7 +34,7 @@ def try_json_parse(response, logger):
         return response.json()
     except:
         logger.debug('Invalid JSON: ' + repr(response.content))
-        raise BitbankClientException('不正なJSONデータがサーバーから返ってきました。お問い合わせください')
+        raise BitbankClientError('不正なJSONデータがサーバーから返ってきました。お問い合わせください')
 
 def error_parser(json_dict):
     if json_dict['success'] == 1:
@@ -43,7 +43,7 @@ def error_parser(json_dict):
         code = str(json_dict['data']['code'])
         contents = ERROR_CODES[code] if code in ERROR_CODES else '不明なエラーです。サポートにお問い合わせ下さい'
         message = 'エラーコード: ' + code + ' 内容: ' + contents
-        raise BitbankClientException(message)
+        raise BitbankClientError(message)
 
 ERROR_CODES = {
     '10000': 'URLが存在しません',
