@@ -28,12 +28,12 @@ from setuptools import setup
 setup(
     name = 'python_bitbankcc',
     packages = ['python_bitbankcc'],
-    version = '0.0.4',
+    version = '0.0.6',
     description = 'Lib for bitbank.cc Private and Public API',
     author = 'BitbankInc',
     author_email = 'system@bitcoinbank.co.jp',
     url = 'https://github.com/bitbankinc/python-bitbankcc/',
-    download_url = 'https://github.com/bitbankinc/python-bitbankcc/archive/v0.0.3.tar.gz',
+    download_url = 'https://github.com/bitbankinc/python-bitbankcc/archive/v0.0.6.tar.gz',
     keywords = ['trading', 'bitcoin', 'japan', 'API', 'exchange'],
     classifiers = [],
 )

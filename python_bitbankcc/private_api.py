@@ -91,6 +91,8 @@ class bitbankcc_private(object):
             'order_id': order_id
         })
 
+    # XXX: options should be named arguments like get_trade_history?
+    #      this breaks compat.
     def get_active_orders(self, pair, options=None):
         if options is None:
             options = {}
@@ -139,6 +141,15 @@ class bitbankcc_private(object):
         if order != None: params['order'] = order
         return self._get_query('/user/spot/trade_history?', params)
 
+    def get_deposit_history(self, asset, count = None, since = None, end = None, order = None):
+        params = {
+            'asset': asset,
+        }
+        if count != None: params['count'] = count
+        if since != None: params['since'] = since
+        if end != None: params['end'] = end
+        if order != None: params['order'] = order
+        return self._get_query('/user/deposit_history?', params)
 
     def get_withdraw_account(self, asset):
         return self._get_query('/user/withdrawal_account?', {
@@ -153,3 +164,13 @@ class bitbankcc_private(object):
         }
         q.update(token)
         return self._post_query('/user/request_withdrawal', q)
+
+    def get_withdraw_history(self, asset, count = None, since = None, end = None, order = None):
+        params = {
+            'asset': asset,
+        }
+        if count != None: params['count'] = count
+        if since != None: params['since'] = since
+        if end != None: params['end'] = end
+        if order != None: params['order'] = order
+        return self._get_query('/user/withdrawal_history?', params)

@@ -76,7 +76,7 @@ print(json.dumps(value))
 ### プライベートAPI
 
 ```python
-import os, json
+import os, json, time
 
 API_KEY = os.environ['BITBANK_API_KEY']
 API_SECRET = os.environ['BITBANK_API_SECRET']
@@ -133,6 +133,17 @@ value = prv.get_trade_history(
     'btc_jpy', # ペア
     '10' # 取得する約定数
 )
+print(json.dumps(value))
+
+value = prv.get_deposit_history(
+    'btc', # アセットタイプ
+    # 以降は任意の引数
+    '10', # 取得する履歴数
+    time.mktime((2018,4,11,21,57, 4, 0,0,-1)) * 1000, # 開始時刻（この時刻以降を対象とする。ミリ秒指定に注意）
+    time.mktime((2018,4,11,22, 1,51, 0,0,-1)) * 1000, # 終了時刻（この時刻以前を対象とする。ミリ秒指定に注意）
+    'asc' # ソート順
+)
+print(json.dumps(value))
 
 value = prv.get_withdraw_account(
     'btc' # アセットタイプ
@@ -147,6 +158,16 @@ value = prv.request_withdraw(
         'otp_token': '387427',
         'sms_token': '836827'
     }
+)
+print(json.dumps(value))
+
+value = prv.get_withdraw_history(
+    'btc', # アセットタイプ
+    # 以降は任意の引数
+    '10', # 取得する履歴数
+    time.mktime((2018,4,11,21,57, 4, 0,0,-1)) * 1000, # 開始時刻（この時刻以降を対象とする。ミリ秒指定に注意）
+    time.mktime((2018,4,11,22, 1,51, 0,0,-1)) * 1000, # 終了時刻（この時刻以前を対象とする。ミリ秒指定に注意）
+    'asc' # ソート順
 )
 print(json.dumps(value))
 ```
