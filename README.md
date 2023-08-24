@@ -71,6 +71,11 @@ value = pub.get_candlestick(
     '20170313' # YYYYMMDD 型の日付
 )
 print(json.dumps(value))
+
+value = pub.get_circuit_break_info(
+    'btc_jpy' # ペア
+)
+print(json.dumps(value))
 ```
 
 ### プライベートAPI
