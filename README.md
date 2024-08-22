@@ -86,7 +86,18 @@ import os, json, time
 API_KEY = os.environ['BITBANK_API_KEY']
 API_SECRET = os.environ['BITBANK_API_SECRET']
 
-prv = python_bitbankcc.private(API_KEY, API_SECRET)
+# ACCESS-TIME-WINDOW method
+config = {
+    'auth_method': 'request_time',
+    'time_window': 5000,
+}
+prv = python_bitbankcc.private(API_KEY, API_SECRET, config=config)
+
+# ACCESS-NONCE method
+config = {
+    'auth_method': 'nonce',
+}
+prv = python_bitbankcc.private(API_KEY, API_SECRET, config=config)
 
 # PRIVATE TEST
 
