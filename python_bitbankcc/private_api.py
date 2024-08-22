@@ -46,7 +46,7 @@ def sign_request(key, query):
     h = hmac.new(bytearray(key, 'utf8'), bytearray(query, 'utf8'), sha256)
     return h.hexdigest()
 
-def make_header(query_data, api_key, api_secret):
+def make_nonce_header(query_data, api_key, api_secret):
     nonce = str(int(time.time() * 1000))
     message = nonce + query_data
     return {
@@ -56,18 +56,40 @@ def make_header(query_data, api_key, api_secret):
         'ACCESS-SIGNATURE': sign_request(api_secret, message)
     }
 
+def make_request_time_header(query_data, api_key, api_secret, time_window):
+    request_time = str(int(time.time() * 1000))
+    time_window = str(time_window)
+    message = "".join([request_time, time_window, query_data])
+    return {
+        'Content-Type': 'application/json',
+        'ACCESS-KEY': api_key,
+        'ACCESS-REQUEST-TIME': request_time,
+        'ACCESS-TIME-WINDOW': time_window,
+        'ACCESS-SIGNATURE': sign_request(api_secret, message)
+    }
+
+default_config = {
+    'end_point':'https://api.bitbank.cc/v1',
+    'auth_method': 'request_time',
+    'time_window': 5000,
+}
+
 class bitbankcc_private(object):
 
-    def __init__(self, api_key, api_secret, end_point='https://api.bitbank.cc/v1'):
-        self.end_point = end_point
-        self.path_stub = get_path_from_end_point(end_point)
+    def __init__(self, api_key, api_secret, end_point='https://api.bitbank.cc/v1', config=default_config):
+        self.end_point = config['end_point'] if 'end_point' in config else 'https://api.bitbank.cc/v1'
+        self.path_stub = get_path_from_end_point(self.end_point)
         self.api_key = api_key
         self.api_secret = api_secret
+        self.auth_method = config['auth_method'] if 'auth_method' in config else 'request_time'
+        self.time_window = config['time_window'] if 'time_window' in config else 5000
 
     def _get_query(self, path, query):
         data = self.path_stub + path + urlencode(query)
         logger.debug('GET: ' + data)
-        headers = make_header(data, self.api_key, self.api_secret)
+        headers = make_request_time_header(data, self.api_key, self.api_secret, self.time_window) \
+            if self.auth_method == 'request_time' \
+            else make_nonce_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path + urlencode(query)
         with contextlib.closing(requests.get(uri, headers=headers)) as response:
             response.raise_for_status()
@@ -76,7 +98,9 @@ class bitbankcc_private(object):
     def _post_query(self, path, query):
         data = json.dumps(query)
         logger.debug('POST: ' + data)
-        headers = make_header(data, self.api_key, self.api_secret)
+        headers = make_request_time_header(data, self.api_key, self.api_secret, self.time_window) \
+            if self.auth_method == 'request_time' \
+            else make_nonce_header(data, self.api_key, self.api_secret)
         uri = self.end_point + path
         with contextlib.closing(requests.post(uri, data=data, headers=headers)) as response:
             response.raise_for_status()

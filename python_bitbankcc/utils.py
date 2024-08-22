@@ -25,7 +25,7 @@
 
 class BitbankClientError(Exception):
     def __init__(self, error_message=None):
-        self.msg = error_message 
+        self.msg = error_message
     def __str__(self):
         return self.msg
 
@@ -52,16 +52,21 @@ ERROR_CODES = {
     '10003': 'システムエラーが発生しました。サポートにお問い合わせ下さい',
     '10005': 'タイムアウトエラーが発生しました。しばらく間をおいて再度実行して下さい',
     '20001': 'API認証に失敗しました',
-    '20002': 'APIキーが不正です',
-    '20003': 'APIキーが存在しません',
-    '20004': 'API Nonceが存在しません',
-    '20005': 'APIシグネチャが存在しません',
+    '20002': 'ACCESS-KEYの値が不正です',
+    '20003': 'ACCESS-KEYが存在しません',
+    '20005': 'ACCESS-SIGNATUREが存在しません',
     '20011': '２段階認証に失敗しました',
     '20014': 'SMS認証に失敗しました',
     '20023': '２段階認証コードを入力して下さい',
     '20024': 'SMS認証コードを入力して下さい',
     '20025': '２段階認証コードとSMS認証コードを入力して下さい',
     '20026': '一定回数以上２段階認証に失敗したためロックしました。60秒待ってから再度お試しください',
+    '20034': 'ACCESS-REQUEST-TIMEの時刻が不正です',
+    '20035': 'ACCESS-TIME-WINDOW内にリクエストが送信されませんでした',
+    '20036': 'ACCESS-REQUEST-TIMEおよびACCESS-NONCEが存在しません',
+    '20037': 'ACCESS-REQUEST-TIMEの値が不正です',
+    '20038': 'ACCESS-TIME-WINDOWの値が不正です',
+    '20039': 'ACCESS-NONCEの値が不正です',
     '30001': '注文数量を指定して下さい',
     '30006': '注文IDを指定して下さい',
     '30007': '注文ID配列を指定して下さい',
