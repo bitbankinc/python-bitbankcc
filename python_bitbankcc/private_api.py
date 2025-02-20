@@ -202,3 +202,6 @@ class bitbankcc_private(object):
         if end != None: params['end'] = end
         if order != None: params['order'] = order
         return self._get_query('/user/withdrawal_history?', params)
+
+    def get_subscribe(self):
+        return self._get_query('/user/subscribe', {})
