@@ -28,7 +28,7 @@ from setuptools import setup
 setup(
     name = 'python_bitbankcc',
     packages = ['python_bitbankcc'],
-    version = '0.1.0',
+    version = '0.2.0',
     description = 'Lib for bitbank.cc Private and Public API',
     author = 'BitbankInc',
     author_email = 'system@bitcoinbank.co.jp',
