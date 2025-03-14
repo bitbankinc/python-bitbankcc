@@ -124,7 +124,7 @@ class bitbankcc_private(object):
             options['pair'] = pair
         return self._get_query('/user/spot/active_orders?', options)
 
-    def order(self, pair, price, amount, side, order_type, post_only = None, trigger_price = None):
+    def order(self, pair, price, amount, side, order_type, post_only = None, trigger_price = None, position_side = None):
         params = {
             'pair': pair,
             'amount': amount,
@@ -134,6 +134,7 @@ class bitbankcc_private(object):
         if price != None: params['price'] = price
         if post_only != None: params['post_only'] = post_only
         if trigger_price != None: params['trigger_price'] = trigger_price
+        if position_side != None: params['position_side'] = position_side
         return self._post_query('/user/spot/order', params)
 
     def cancel_order(self, pair, order_id):
@@ -164,6 +165,9 @@ class bitbankcc_private(object):
         if end != None: params['end'] = end
         if order != None: params['order'] = order
         return self._get_query('/user/spot/trade_history?', params)
+
+    def get_margin_positions(self):
+        return self._get_query('/user/margin/positions', {})
 
     def get_deposit_history(self, asset, count = None, since = None, end = None, order = None):
         params = {
