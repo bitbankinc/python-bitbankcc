@@ -190,4 +190,7 @@ value = prv.get_withdraw_history(
     'asc' # ソート順
 )
 print(json.dumps(value))
+
+value = prv.get_subscribe()
+print(json.dumps(value))
 ```
