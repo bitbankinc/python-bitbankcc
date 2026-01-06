@@ -59,7 +59,7 @@ def make_nonce_header(query_data, api_key, api_secret):
 def make_request_time_header(query_data, api_key, api_secret, time_window):
     request_time = str(int(time.time() * 1000))
     time_window = str(time_window)
-    message = "".join([request_time, time_window, query_data])
+    message = ''.join([request_time, time_window, query_data])
     return {
         'Content-Type': 'application/json',
         'ACCESS-KEY': api_key,
@@ -85,6 +85,8 @@ class bitbankcc_private(object):
         self.time_window = config['time_window'] if 'time_window' in config else 5000
 
     def _get_query(self, path, query):
+        if len(query) > 0 and '?' not in path :
+            path = path + '?'
         data = self.path_stub + path + urlencode(query)
         logger.debug('GET: ' + data)
         headers = make_request_time_header(data, self.api_key, self.api_secret, self.time_window) \
@@ -110,7 +112,7 @@ class bitbankcc_private(object):
         return self._get_query('/user/assets', {})
 
     def get_order(self, pair, order_id):
-        return self._get_query('/user/spot/order?', {
+        return self._get_query('/user/spot/order', {
             'pair': pair,
             'order_id': order_id
         })
@@ -122,7 +124,7 @@ class bitbankcc_private(object):
             options = {}
         if not 'pair' in options:
             options['pair'] = pair
-        return self._get_query('/user/spot/active_orders?', options)
+        return self._get_query('/user/spot/active_orders', options)
 
     def order(self, pair, price, amount, side, order_type, post_only = None, trigger_price = None, position_side = None):
         params = {
@@ -164,23 +166,23 @@ class bitbankcc_private(object):
         if since != None: params['since'] = since
         if end != None: params['end'] = end
         if order != None: params['order'] = order
-        return self._get_query('/user/spot/trade_history?', params)
+        return self._get_query('/user/spot/trade_history', params)
 
     def get_margin_positions(self):
         return self._get_query('/user/margin/positions', {})
 
-    def get_deposit_history(self, asset, count = None, since = None, end = None, order = None):
-        params = {
-            'asset': asset,
-        }
+    def get_deposit_history(self, asset=None, count = None, since = None, end = None, order = None):
+        params = {}
+        if asset != None: params['asset'] = asset
         if count != None: params['count'] = count
         if since != None: params['since'] = since
         if end != None: params['end'] = end
         if order != None: params['order'] = order
-        return self._get_query('/user/deposit_history?', params)
+        url = '/user/deposit_history'
+        return self._get_query(url, params)
 
     def get_withdraw_account(self, asset):
-        return self._get_query('/user/withdrawal_account?', {
+        return self._get_query('/user/withdrawal_account', {
             'asset': asset
         })
 
@@ -193,15 +195,15 @@ class bitbankcc_private(object):
         q.update(token)
         return self._post_query('/user/request_withdrawal', q)
 
-    def get_withdraw_history(self, asset, count = None, since = None, end = None, order = None):
-        params = {
-            'asset': asset,
-        }
+    def get_withdraw_history(self, asset = None, count = None, since = None, end = None, order = None):
+        params = {}
+        if asset != None: params['asset'] = asset
         if count != None: params['count'] = count
         if since != None: params['since'] = since
         if end != None: params['end'] = end
         if order != None: params['order'] = order
-        return self._get_query('/user/withdrawal_history?', params)
+        url = '/user/withdrawal_history'
+        return self._get_query(url, params)
 
     def get_subscribe(self):
         return self._get_query('/user/subscribe', {})
