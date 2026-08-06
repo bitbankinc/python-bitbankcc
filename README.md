@@ -127,7 +127,7 @@ value = prv.order(
     'limit', # 注文タイプ (limit|market|stop|stop_limit)
     # 以降は任意の引数
     False, # post_only 注文、デフォは False, None も可能で Falseと同じ挙動
-    '151594' # trigger_price 逆指値などのトリガー価格
+    '151594', # trigger_price 逆指値などのトリガー価格
     'long' # 信用取引の場合のみ指定（long|short）
 )
 print(json.dumps(value))
